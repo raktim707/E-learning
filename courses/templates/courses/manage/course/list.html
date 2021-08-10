@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}My courses{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <h1 class="card-header">My courses</h1>
+</div>
+<div id="sidebar">
+  <p style="text-align: center;"><a href="{% url "course_create" %}" class="button">Create new course</a></p>
+</div>
+
+
+  <div class="module">
+    {% for course in object_list %}
+    <div class="card" style="width: 40rem;">
+      <div class="card-body">
+      <div class="breadcrumb">
+          <li>
+      <h3>{{ course.title }}</h3>
+        <p>
+          <a class="card-link" href="{% url "course_edit" course.id %}">Edit</a>
+          <a class="card-link" href="{% url "course_delete" course.id %}">Delete</a>
+          <a class="card-link" href="{% url "course_module_update" course.id %}">Edit modules</a>
+          {% if course.modules.count > 0 %}
+          <a class="card-link" href="{% url 'module_content_list' course.modules.first.id %}">Manage contents</a>
+          {% endif %}
+        </p>
+      </li>
+      </div>
+    </div>
+  </div>
+    {% empty %}
+      <p>You haven't created any courses yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
