@@ -1,34 +1,48 @@
 {% extends "base.html" %}
 {% load blog_tags %}
+{% load static %}
 
 {% block title %}My Blog{% endblock %}
 
-{% block content %}
 
-<div class="container col-lg-10" style="font-size: medium; margin-top: 2rem;">
-    {% if tag %}
-        <h3>Posts tagged with "{{ tag.name }}"</h3>
-    {% endif %}
-    {% for post in posts %}
-    <h4>
-        <a href="{{ post.get_absolute_url }}">
-            {{ post.title }}
-        </a>
-        <p class="tags">
-            Tags:
-            {% for tag in post.tags.all %}
-            <a style="color:rgb(148, 180, 101)" href="{% url 'blog:post_list_by_tag' tag.slug %}">
-                {{ tag.name }}
-            </a>
-                {% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-    </h4>
-    <p class="date">
-        Published {{ post.publish }} by {{ post.author }}
-    </p>
-    {{ post.body|markdown|truncatewords_html:30 }}
-    {% endfor %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+
+<section>
+<div class="container">
+    <div class="text-center mb-5">
+        <h5 class="text-primary h6">Geekacademy</h5>
+        <h2 class="display-20 display-md-18 display-lg-16">
+            {% if tag %}
+                <h3>Posts tagged with "{{ tag.name }}"</h3>
+            {% else %}
+            Most recent Tutorials</h2>
+            {% endif %}
+    </div>
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-lg-4 col-md-6 mb-2-6">
+            <article class="card card-style2">
+                <div class="card-img">
+                    <img class="rounded-top" src="{% if post.image %}{{ post.image.url }}{% else %} {% static 'img/no_img.png' %}{% endif %}" alt="...">
+                    <div class="date"><span>{{post.publish.day}}</span>{{post.publish.month|month_name}}</div>
+                </div>
+                <div class="card-body">
+                    <h3 class="h5"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                    <p class="display-30">{{ post.body|markdown|truncatewords_html:20 }}</p>
+                    <a href="{{ post.get_absolute_url }}" class="read-more">read more</a>
+                </div>
+                <div class="card-footer">
+                    <ul>
+                        <li><a href="{{ post.get_absolute_url }}"><i class="fas fa-user"></i>{{ post.author }}</a></li>
+                        <li><a href="{{ post.get_absolute_url }}"><i class="far fa-comment-dots"></i><span>{{ post|total_comments}}</span></a></li>
+                    </ul>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
     {% include 'pagination.html' with page=posts %}
 </div>
+</section>
 {% endblock %}
