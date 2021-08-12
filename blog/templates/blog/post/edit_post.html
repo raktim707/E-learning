@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Edit Post{% endblock %}
+
+{% block content %}
+<div class="container-fluid col-lg-8" style="text-align: justify; margin: 2rem;">
+    <h3>Edit Your Post</h3>
+    <form method="POST">
+    <div class="form-group">
+        {{form.media}}
+        {{form|crispy}}
+        {% csrf_token %}
+        <input type="submit" value="save post">
+    </div>
+</form>
+</div>
+
+{% endblock %}

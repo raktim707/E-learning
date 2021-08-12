@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load blog_tags %}
+
+{% block content %}
+<div class="card col-lg-auto">
+    <div class="card-header">
+    {{post.title}}
+</div>
+   <p>{{post.body|markdown|truncatewords_html:30}}</p>
+   </div>
+   <div class="card">
+    <div class="card-body">
+    <form method="POST">
+        {% csrf_token %}
+            <div class="row">
+                <div class="col">
+                    Are you sure you want to delete this item?
+                </div>
+            </div>
+    <div class="input-group mb-2">
+        <input type="submit" role="button" aria-label="Default" style="background-color: red;" value="yes">
+    </div>
+        <p><a href="{% url 'blog:instructor_posts' %}" class="btn btn-secondary" role="button">No</a></p>
+    </form>
+</div>
+</div>
+{% endblock %}

@@ -1,15 +1,16 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load blog_tags %}
-
-{% block title %}My Blog{% endblock %}
+{% block title %}My Articles{% endblock %}
 
 {% block content %}
-
-<div class="container col-lg-10" style="font-size: medium; margin-top: 2rem;">
-    {% if tag %}
-        <h3>Posts tagged with "{{ tag.name }}"</h3>
-    {% endif %}
-    {% for post in posts %}
+<div id="sidebar">
+    <p style="text-align: center; padding-top: 10px;"><a href="{% url "blog:create_post" %}" class="button">Write new article</a></p>
+</div>
+<div class="container col-lg-10">
+    <div class="breadcrumb">
+    <h2>My Articles</h2>
+</div>
+    {% for post in all_posts %}
     <h4>
         <a href="{{ post.get_absolute_url }}">
             {{ post.title }}
@@ -29,6 +30,6 @@
     </p>
     {{ post.body|markdown|truncatewords_html:30 }}
     {% endfor %}
-    {% include 'pagination.html' with page=posts %}
 </div>
+
 {% endblock %}

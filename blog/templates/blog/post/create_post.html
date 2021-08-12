@@ -11,6 +11,7 @@
             <div class="col-sm-auto">
                 <div class="form-group">
                 {{ form.as_p}}
+                {{ form.media }}
                 {% csrf_token %}
                 <input type="submit" value="save post">
                 </div>

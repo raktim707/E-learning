@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse
 from django.utils.text import slugify
+from unidecode import unidecode
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -21,7 +23,7 @@ class Post(models.Model):
     )
     title = models.CharField(max_length=250)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    body = models.TextField()
+    body = RichTextUploadingField(blank=True)
     image = models.ImageField(upload_to="images", blank=True)
     publish = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
@@ -37,7 +39,7 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = slugify(self.title)
+            self.slug = slugify(unidecode(self.title))
         super(Post, self).save(*args, **kwargs)
     
     def get_absolute_url(self):

@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, reverse
 from .models import Post, Comment
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from .forms import EmailPostForm, CommentForm, PostForm
@@ -73,17 +73,50 @@ def post_share(request, post_id):
 
 def postCreate(request):
     new_post = None
-    if request.method == 'POST':
-        if request.user.is_authenticated:
+    if request.user.groups.filter(name='Instructors'):
+        if request.method == 'POST':
             form = PostForm(data=request.POST)
             if form.is_valid():
                 new_post = form.save(commit=False)
                 new_post.author = request.user
                 new_post.save()
             return HttpResponseRedirect(new_post.get_absolute_url())
+        else:
+            form = PostForm()
     else:
-        form = PostForm()
+        return HttpResponseRedirect(reverse('blog:post_list'))
     return render(request, 'blog/post/create_post.html', {'form':form})
+
+def postEdit(request, post_id):
+    post = get_object_or_404(Post, id=post_id, status='published')
+    if post.author == request.user:
+        if request.method == 'POST':
+            form = PostForm(instance=post, data=request.POST)
+            if form.is_valid():
+                form.save()
+            return HttpResponseRedirect(post.get_absolute_url())
+        else:
+            form = PostForm(instance=post)
+    else:
+        return HttpResponseRedirect(reverse('blog:post_list'))
+    return render(request, 'blog/post/edit_post.html', {'form':form, 'post':post })
+        
+def InstructorPosts(request):
+    if request.user.groups.filter(name='Instructors'):
+        user = request.user
+        all_posts = Post.objects.filter(author=user)
+        return render(request, 'blog/post/instructor_posts.html', {'all_posts':all_posts})
+    else:
+        return HttpResponseRedirect('/articles')
+
+def postDelete(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user == post.author:
+        if request.method == 'POST':
+            post.delete()
+            return HttpResponseRedirect('/articles/my-articles')
+        return render(request, 'blog/post/delete_post.html', {'post':post})
+    return HttpResponseRedirect('/articles')
 
 '''def post_search(request):
     query = request.GET.get('search')
