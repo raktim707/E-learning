@@ -1,7 +1,10 @@
-<ul>
-    {% for post in latest_posts %}
-    <li>
-    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-    </li>
-    {% endfor %}
-</ul>
+{% load static %}
+{% for post in latest_posts %}
+<div class="single_post">
+    <p class="m-b-0"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
+    <span>{{post.publish}}</span>
+    <div class="img-post">
+        <img src="{% if post.image %}{{ post.image.url }}{% else %} {% static 'img/no_img.png' %}{% endif %}" alt="Awesome Image">                                        
+    </div>                                            
+</div>
+{%  endfor %}

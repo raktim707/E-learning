@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ckeditor',
     'ckeditor_uploader',
+    'easy_thumbnails',
 ]
 
 MIDDLEWARE = [
@@ -150,7 +151,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = reverse_lazy('students:student_course_list')
+LOGIN_REDIRECT_URL = reverse_lazy('blog:post_list')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
