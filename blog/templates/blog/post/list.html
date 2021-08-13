@@ -24,7 +24,7 @@
         <div class="col-lg-4 col-md-6 mb-2-6">
             <article class="card card-style2">
                 <div class="card-img">
-                    <img class="rounded-top" src="{% if post.image %}{{ post.image.url }}{% else %} {% static 'img/no_img.png' %}{% endif %}" alt="...">
+                    <img class="rounded-top" src="{% if post.image %}{{ post.image.url }}{% else %} {% static 'img/no_img.png' %}{% endif %}" alt="..." height="280">
                     <div class="date"><span>{{post.publish.day}}</span>{{post.publish.month|month_name}}</div>
                 </div>
                 <div class="card-body">
@@ -34,7 +34,7 @@
                 </div>
                 <div class="card-footer">
                     <ul>
-                        <li><a href="{{ post.get_absolute_url }}"><i class="fas fa-user"></i>{{ post.author }}</a></li>
+                        <li><a href="{{ post.get_absolute_url }}"><i class="fas fa-user"></i>{{ post.author }}</a></li>&nbsp;&nbsp;
                         <li><a href="{{ post.get_absolute_url }}"><i class="far fa-comment-dots"></i><span>{{ post|total_comments}}</span></a></li>
                     </ul>
                 </div>

@@ -91,7 +91,7 @@ def postEdit(request, post_id):
     post = get_object_or_404(Post, id=post_id, status='published')
     if post.author == request.user:
         if request.method == 'POST':
-            form = PostForm(instance=post, data=request.POST)
+            form = PostForm(instance=post, data=request.POST, files=request.FILES)
             if form.is_valid():
                 form.save()
             return HttpResponseRedirect(post.get_absolute_url())

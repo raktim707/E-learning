@@ -16,9 +16,29 @@
                     <div class="card single_post">
                         <div class="body">
                             <div class="img-post">
-                                <img class="d-block img-fluid" src="https://via.placeholder.com/800x280/87CEFA/000000" alt="First slide">
+                                <img class="d-block img-fluid" src="{% if post.image %}{{ post.image.url }}{% else %} {% static 'img/no_img.png' %}{% endif %}" alt="First slide">
+                                <p class="tags">
+                                    Tags:
+                                    {% for tag in post.tags.all %}
+                                    <a style="color:rgb(148, 180, 101)" href="{% url 'blog:post_list_by_tag' tag.slug %}">
+                                        {{ tag.name }}
+                                    </a>
+                                        {% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </p>
                             </div>
-                            <h3><a href="blog-details.html">{{post.title}}</a></h3>
+                            {% if request.user == post.author %}
+                            <p class="date">
+                                <a href="{% url 'blog:edit_post' post.id %}">Edit post</a>&nbsp;&nbsp;  
+                                <a href="{% url 'blog:delete_post' post.id %}">Delete post</a>&nbsp;&nbsp;
+                            {% endif %}
+                                <a href="{% url 'blog:post_share' post.id %}">Share this post</a>
+                            </p>
+                            <br>
+                            <h3><a href="{{ post.get_absolute_url }}">{{post.title}}</a></h3>
+                            <p class="date">
+                                Published {{ post.publish }} by {{ post.author }}
+                            </p>
                             <p>{{ post.body|markdown }}</p>
                         </div>                        
                     </div>
@@ -94,19 +114,35 @@
                         </div>
                         <div class="body widget">
                             <ul class="list-unstyled categories-clouds m-b-0">
-                                <li><a href="javascript:void(0);">eCommerce</a></li>
-                                <li><a href="javascript:void(0);">Microsoft Technologies</a></li>
-                                <li><a href="javascript:void(0);">Creative UX</a></li>
-                                <li><a href="javascript:void(0);">Wordpress</a></li>
-                                <li><a href="javascript:void(0);">Angular JS</a></li>
-                                <li><a href="javascript:void(0);">Enterprise Mobility</a></li>
-                                <li><a href="javascript:void(0);">Website Design</a></li>
-                                <li><a href="javascript:void(0);">HTML5</a></li>
-                                <li><a href="javascript:void(0);">Infographics</a></li>
-                                <li><a href="javascript:void(0);">Wordpress Development</a></li>
+                                {% all_tags as total_tags %}
+                                {% for tag in total_tags %}
+                                <li><a href="javascript:void(0);">{{ tag }}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
+
+                    <div class="card">
+                        <div class="header">
+                            <h2>Recommended Posts</h2>
+                        </div>
+                        <div class="body widget popular-post">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {% for post in similiar_posts %}
+                                    <div class="single_post">
+                                        <p class="m-b-0"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
+                                        <span>{{post.publish}}</span>
+                                        <div class="img-post">
+                                            <a href="{{ post.get_absolute_url }}"><img src="{% if post.image %}{{ post.image.url }}{% else %} {% static 'img/no_img.png' %}{% endif %}" alt="Awesome Image" width="400" height="150"></a>                                       
+                                        </div>                                            
+                                    </div>
+                                    {%  endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card">
                         <div class="header">
                             <h2>Popular Posts</h2>                        
@@ -114,51 +150,16 @@
                         <div class="body widget popular-post">
                             <div class="row">
                                 <div class="col-lg-12">
+                                    {% get_most_commented_posts as most_commented_posts %}
+                                    {% for post in most_commented_posts %}
                                     <div class="single_post">
-                                        <p class="m-b-0">Apple Introduces Search Ads Basic</p>
-                                        <span>jun 22, 2018</span>
+                                        <p class="m-b-0"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
+                                        <span>{{post.publish}}</span>
                                         <div class="img-post">
-                                            <img src="https://via.placeholder.com/280x280/87CEFA/000000" alt="Awesome Image">                                        
+                                            <img src="{% if post.image %}{{ post.image.url }}{% else %} {% static 'img/no_img.png' %}{% endif %}" alt="Awesome Image">                                        
                                         </div>                                            
                                     </div>
-                                    <div class="single_post">
-                                        <p class="m-b-0">new rules, more cars, more races</p>
-                                        <span>jun 8, 2018</span>
-                                        <div class="img-post">
-                                            <img src="https://via.placeholder.com/280x280/87CEFA/000000" alt="Awesome Image">                                            
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="header">
-                            <h2>Instagram Post</h2>
-                        </div>
-                        <div class="body widget">
-                            <ul class="list-unstyled instagram-plugin m-b-0">
-                                <li><a href="javascript:void(0);"><img src="https://via.placeholder.com/100x100/87CEFA/000000" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="https://via.placeholder.com/100x100/87CEFA/000000" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="https://via.placeholder.com/100x100/87CEFA/000000" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="https://via.placeholder.com/100x100/87CEFA/000000" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="https://via.placeholder.com/100x100/87CEFA/000000" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="https://via.placeholder.com/100x100/87CEFA/000000" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="https://via.placeholder.com/100x100/87CEFA/000000" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="https://via.placeholder.com/100x100/87CEFA/000000" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="https://via.placeholder.com/100x100/87CEFA/000000" alt="image description"></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="header">
-                            <h2>Email Newsletter <small>Get our products/news earlier than others, let’s get in touch.</small></h2>
-                        </div>
-                        <div class="body widget newsletter">                        
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Enter Email">
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><i class="icon-paper-plane"></i></span>
+                                    {%  endfor %}
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,6 @@
 from django import template
 from ..models import Post
+from taggit.models import Tag
 from django.db.models import Count
 import markdown
 from django.utils.safestring import mark_safe
@@ -32,3 +33,7 @@ def month_name(value):
 def total_comments(post):
     comments = post.comments.filter(active=True)
     return comments.count()
+
+@register.simple_tag
+def all_tags():
+    return Tag.objects.all()
