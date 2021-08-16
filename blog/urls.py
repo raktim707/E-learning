@@ -12,7 +12,7 @@ urlpatterns=[
     path('create/', views.postCreate, name='create_post'),
     path('edit/<int:post_id>/', views.postEdit, name='edit_post'),
     path('my-articles/', views.InstructorPosts, name='instructor_posts'),
-    path('delete/<int:post_id>/', views.postDelete, name='delete_post')
+    path('delete/<int:post_id>/', views.postDelete, name='delete_post'),
     #path('feed/', LatestPostFeed(), name="post_feed"),
-    #path('search/', views.post_search, name='post_search'),
+    path('search/', views.post_search, name='post_search'),
 ]

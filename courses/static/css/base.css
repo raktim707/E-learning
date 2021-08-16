@@ -792,14 +792,14 @@ ul#course-modules li:hover {
     padding-right:0;
 }
 
-@media screen and (max_width: 700px) {
+@media screen and (max_width: 640px) {
     .html {
         font-size: 40%;
     }
     .contents {
-        width:80%;
+        width:100%;
         padding:2px;
-        float:center;
+        float:right;
     }
 }
 
