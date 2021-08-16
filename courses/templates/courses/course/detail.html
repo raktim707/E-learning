@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
   {{ object.title }}
@@ -21,17 +22,17 @@
       {% if request.user.is_authenticated %}
         {% if request.user in object.students.all %}
         <p><a href="{% url "students:student_course_detail" course.id %}">
-          Access contents</a></p>
+          {% trans "Access contents" %}</a></p>
           {% else %}
             <form action="{% url 'students:student_enroll_course' %}" method="POST">
             {{ enroll_form }}
             {% csrf_token %}
             <input type="submit" value="Enroll-now">
           </form>
-          {%  endif %}
+          {% endif %}
       {% else %}
       <a href="{% url 'students:student_registration' %}" class="button">
-        Register to enroll 
+        {% trans "Register to enroll" %} 
       </a>
       {% endif %}
     </div>

@@ -5,7 +5,7 @@ from .forms import EmailPostForm, CommentForm, PostForm
 from django.core.mail import send_mail
 from taggit.models import Tag
 from django.db.models import Count
-#from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 def post_list(request, tag_slug=None):    
     object_list = Post.published.all()
@@ -118,9 +118,12 @@ def postDelete(request, post_id):
         return render(request, 'blog/post/delete_post.html', {'post':post})
     return HttpResponseRedirect('/articles')
 
-'''def post_search(request):
+def post_search(request):
     query = request.GET.get('search')
     results = []
+    
     if query:
-        results = Post.published.annotate(search=SearchVector('title', 'body'),).filter(search=query)
-    return render(request, 'blog/post/search.html', {'query':query, 'results':results})'''
+        search_vector = SearchVector('title', 'body')
+        search_query = SearchQuery(query)
+        results = Post.published.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search=search_query).order_by('-rank')
+    return render(request, 'blog/post/search.html', {'query':query, 'results':results})
